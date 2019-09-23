@@ -55,7 +55,7 @@ class CategoryDetailView(APIView):
     
     def put(self, request, pk):
         """
-        Updating a specific category
+        Update a specific category
         """
         category = Category.objects.get(pk=pk)
         serializer = CategorySerializer(category, data=request.data)
@@ -63,3 +63,11 @@ class CategoryDetailView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        """
+        delete a specific category
+        """
+        category = Category.objects.get(pk=pk)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
