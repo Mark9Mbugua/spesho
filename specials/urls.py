@@ -5,6 +5,7 @@ from .views import *
 
 urlpatterns = [
     path('categories/', CategoryListView.as_view(), name='categories'),
+    re_path('categories/(?P<pk>[0-9A-Fa-f-]+)', CategoryDetailView.as_view(), name='get_category'),
     
 ]
 
