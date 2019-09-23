@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'imagekit',
+    'phonenumber_field',
+    'minio_storage',
     #apps
     'accounts',
     'specials',
@@ -86,6 +89,21 @@ DATABASES = {
         'PASSWORD': config('DATABASE_PASSWORD'),
     }
 }
+
+# Minio configuration
+DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+# STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+MINIO_STORAGE_ACCESS_KEY = config('MINIO_ACCESS_KEY')
+MINIO_STORAGE_SECRET_KEY = config('MINIO_SECRET_KEY')
+MINIO_STORAGE_ENDPOINT = config('MINIO_STORAGE_ENDPOINT')
+MINIO_STORAGE_USE_HTTPS = False
+MINIO_STORAGE_MEDIA_BUCKET_NAME = "dev-media-items-bucket"
+MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+MINIO_STORAGE_STATIC_BUCKET_NAME = "dev-static-items-bucket"
+MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000 /minio/dev-media-items-bucket'
+MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
+MINIO_STORAGE_STATIC_USE_PRESIGNED = True
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
