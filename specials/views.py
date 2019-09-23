@@ -71,3 +71,23 @@ class CategoryDetailView(APIView):
         category = Category.objects.get(pk=pk)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class SubCategoryListView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def post(self, request, pk):
+        """
+        post a sub category
+        """
+        #if request.user.is_authenticated:
+        serializer = SubCategorySerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            category = get_object_or_404(Category, pk=pk)
+            serializer.validated_data.update(category=category)
+            sub_category = SubCategory.objects.create(**serializer.validated_data)
+            serializer = SubCategorySerializer(sub_category)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_401_UNAUTHORIZED)
