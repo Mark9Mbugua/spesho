@@ -41,3 +41,14 @@ class CategoryListView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         #return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class CategoryDetailView(APIView):
+
+    def get(self, request, pk):
+        """
+        Checking a specific category
+        """
+        category = Category.objects.get(pk=pk)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data, status=status.HTTP_200_OK)
