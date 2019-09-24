@@ -169,3 +169,32 @@ class OfferItemListView(APIView):
             serializer = OfferItemSerializer(offer_item)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OfferItemDetailView(APIView):
+
+    def get(self, request, pk):
+        """
+        Checking a specific offer item
+        """
+        offer_item = OfferItem.objects.filter(pk=pk)
+        serializer = OfferItemSerializer(offer_item, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk):
+        """
+        Update a specific offer item
+        """
+        offer_item = OfferItem.objects.get(pk=pk)
+        serializer = OfferItemSerializer(offer_item, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        """
+        delete a specific offer item
+        """
+        offer_item = OfferItem.objects.get(pk=pk)
+        offer_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

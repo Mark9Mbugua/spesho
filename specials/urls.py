@@ -9,7 +9,8 @@ urlpatterns = [
     re_path('categories/(?P<pk>[0-9A-Fa-f-]+)', CategoryDetailView.as_view(), name='get_category'),
     re_path('types/(?P<pk>[0-9A-Fa-f-]+)', SubCategoryListView.as_view(), name='sub_categories'),
     re_path('type/(?P<pk>[0-9A-Fa-f-]+)', SubCategoryDetailView.as_view(), name='sub_category_detail'),
-    re_path('items/(?P<pk>[0-9A-Fa-f-]+)', OfferItemListView.as_view(), name='offer_items'),    
+    re_path('items/(?P<pk>[0-9A-Fa-f-]+)', OfferItemListView.as_view(), name='offer_items'),
+    re_path('item/(?P<pk>[0-9A-Fa-f-]+)', OfferItemDetailView.as_view(), name='offer_items_detail'),     
 ]
 
 if settings.DEBUG:
