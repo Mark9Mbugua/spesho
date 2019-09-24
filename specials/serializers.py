@@ -14,6 +14,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class SubCategorySerializer(serializers.ModelSerializer):
     id = serializers.CharField(allow_blank=False, allow_null=False, read_only=True)
+    sub_category_name = serializers.CharField(allow_blank=False,  allow_null=False)
     category = CategorySerializer(read_only=True)
 
     class Meta:
