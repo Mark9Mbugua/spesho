@@ -92,10 +92,50 @@ class SubCategoryListView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         #return Response(status=status.HTTP_401_UNAUTHORIZED)
 
-    def get (self, request):
+    # def get (self, request):
+    #     """
+    #     get all sub-categories
+    #     """
+    #     sub_categories = SubCategory.objects.all()
+    #     serializers = SubCategorySerializer(sub_categories, many=True)
+    #     return Response(serializers.data, status=status.HTTP_200_OK)
+    
+    def get (self, request, pk):
         """
-        get all sub-categories
+        get all sub-categories belonging to a specific
+        category
         """
-        sub_categories = SubCategory.objects.all()
+        category = get_object_or_404(Category, pk=pk)
+        sub_categories = SubCategory.objects.filter(category=category)
         serializers = SubCategorySerializer(sub_categories, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class SubCategoryDetailView(APIView):
+
+    def get(self, request, pk):
+        """
+        Checking a specific sub-category
+        """
+        sub_category = SubCategory.objects.filter(pk=pk)
+        serializer = SubCategorySerializer(sub_category, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk):
+        """
+        Update a specific sub-category
+        """
+        sub_category = SubCategory.objects.get(pk=pk)
+        serializer = SubCategorySerializer(sub_category, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        """
+        delete a specific sub-category
+        """
+        sub_category = SubCategory.objects.get(pk=pk)
+        sub_category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
