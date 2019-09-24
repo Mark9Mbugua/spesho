@@ -180,7 +180,7 @@ class OfferItemDetailView(APIView):
         serializer = OfferItemSerializer(offer_item, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def patch(self, request, pk):
+    def put(self, request, pk):
         """
         Update a specific offer item
         """
