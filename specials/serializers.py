@@ -24,3 +24,32 @@ class SubCategorySerializer(serializers.ModelSerializer):
             'sub_category_name',
             'category',
         )
+
+class OfferItemSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(allow_blank=False, allow_null=False, read_only=True)
+    item_name = serializers.CharField(allow_blank=False,  allow_null=False)
+    description = serializers.CharField(allow_blank=False, allow_null=True)
+    src = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=True)
+    original_price = serializers.IntegerField(allow_null=False)
+    offer = serializers.IntegerField(allow_null=False, min_value=0, max_value=100)
+    new_price = serializers.IntegerField(allow_null=False)
+    offer_expired = serializers.BooleanField(required=True)
+    sub_category = SubCategorySerializer(read_only=True)
+    affiliate_name = serializers.CharField(allow_blank=False,  allow_null=False)
+
+    class Meta:
+        model = OfferItem
+        fields = (
+            'id',
+            'item_name',
+            'description',
+            'original_price',
+            'offer',
+            'new_price',
+            'offer_expired',
+            'offer_expiry_date',
+            'sub_category',
+            'affiliate_name',
+            'src',
+            'published_at',
+        )

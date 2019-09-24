@@ -52,7 +52,7 @@ class OfferItem(models.Model):
                                                 MaxValueValidator(100)])
     new_price = models.PositiveIntegerField(blank=False, null=False)
     offer_expired = models.BooleanField(default=False)
-    offer_expiry_date = models.DateTimeField(auto_now=False, auto_now_add=False)
+    offer_expiry_date = models.DateField(auto_now=False, auto_now_add=False)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
     affiliate_name = models.CharField(max_length=50, blank=False, null=False)
     src = models.ImageField(upload_to='images/items', null=False, blank=False)

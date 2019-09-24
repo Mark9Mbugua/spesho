@@ -139,3 +139,33 @@ class SubCategoryDetailView(APIView):
         sub_category = SubCategory.objects.get(pk=pk)
         sub_category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class OfferItemListView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def get (self, request, pk):
+        """
+        get all offer items belonging to a specific
+        sub-category
+        """
+        sub_category = get_object_or_404(SubCategory, pk=pk)
+        offer_items = OfferItem.objects.filter(sub_category=sub_category)
+        serializers = OfferItemSerializer(offer_items, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+    
+
+    def post(self, request, pk):
+        """
+        post an offer item
+        """
+        #if request.user.is_authenticated:
+        serializer = OfferItemSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            sub_category = get_object_or_404(SubCategory, pk=pk)
+            serializer.validated_data.update(sub_category=sub_category)
+            offer_item = OfferItem.objects.create(**serializer.validated_data)
+            serializer = OfferItemSerializer(offer_item)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
