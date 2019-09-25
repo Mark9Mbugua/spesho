@@ -141,6 +141,61 @@ class SubCategoryDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class StoreListView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def get (self, request):
+        """
+        get all stores
+        """
+        stores = Store.objects.all()
+        serializers = StoreSerializer(stores, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        """
+        post a store
+        """
+        #if request.user.is_authenticated:
+        serializer = StoreSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class StoreDetailView(APIView):
+
+    def get(self, request, pk):
+        """
+        Checking a specific store
+        """
+        store = Store.objects.get(pk=pk)
+        serializer = StoreSerializer(store)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, pk):
+        """
+        Update a specific store
+        """
+        store = Store.objects.get(pk=pk)
+        serializer = StoreSerializer(store, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        """
+        delete a specific store
+        """
+        store = Store.objects.get(pk=pk)
+        store.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class OfferItemListView(APIView):
 
     permission_classes = (AllowAny,)
