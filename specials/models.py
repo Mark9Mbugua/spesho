@@ -39,6 +39,19 @@ class SubCategory(models.Model):
     def save_sub_category (self):
         return self.save()
 
+
+class Store(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=hex_uuid, editable=False)
+    store_name = models.CharField(max_length=30, blank=False, null=False)
+    description = models.TextField(null=True, blank=False)
+
+    def __str__(self):
+        return self.store_name
+
+    # Method to save stores
+    def save_category (self):
+        return self.save()
+
 class OfferItem(models.Model):
     """
     single item on offer:
@@ -52,9 +65,10 @@ class OfferItem(models.Model):
                                                 MaxValueValidator(100)])
     new_price = models.PositiveIntegerField(blank=False, null=False)
     offer_expired = models.BooleanField(default=False)
+    front_page = models.BooleanField(default=False)
     offer_expiry_date = models.DateField(auto_now=False, auto_now_add=False)
     sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    affiliate_name = models.CharField(max_length=50, blank=False, null=False)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE)
     src = models.ImageField(upload_to='images/items', null=False, blank=False)
     src_thumbnail = ImageSpecField(source='src',
                                       processors=[ResizeToFill(100, 50)],
@@ -71,6 +85,8 @@ class OfferItem(models.Model):
     # Method to save offer items
     def save_offer_item (self):
         return self.save()
+
+
 
 
 
