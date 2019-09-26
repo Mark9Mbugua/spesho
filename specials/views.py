@@ -73,74 +73,6 @@ class CategoryDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SubCategoryListView(APIView):
-
-    permission_classes = (AllowAny,)
-
-    def post(self, request, pk):
-        """
-        post a sub category
-        """
-        #if request.user.is_authenticated:
-        serializer = SubCategorySerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            category = get_object_or_404(Category, pk=pk)
-            serializer.validated_data.update(category=category)
-            sub_category = SubCategory.objects.create(**serializer.validated_data)
-            serializer = SubCategorySerializer(sub_category)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        #return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    # def get (self, request):
-    #     """
-    #     get all sub-categories
-    #     """
-    #     sub_categories = SubCategory.objects.all()
-    #     serializers = SubCategorySerializer(sub_categories, many=True)
-    #     return Response(serializers.data, status=status.HTTP_200_OK)
-    
-    def get (self, request, pk):
-        """
-        get all sub-categories belonging to a specific
-        category
-        """
-        category = get_object_or_404(Category, pk=pk)
-        sub_categories = SubCategory.objects.filter(category=category)
-        serializers = SubCategorySerializer(sub_categories, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
-
-
-class SubCategoryDetailView(APIView):
-
-    def get(self, request, pk):
-        """
-        Checking a specific sub-category
-        """
-        sub_category = SubCategory.objects.filter(pk=pk)
-        serializer = SubCategorySerializer(sub_category, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, pk):
-        """
-        Update a specific sub-category
-        """
-        sub_category = SubCategory.objects.get(pk=pk)
-        serializer = SubCategorySerializer(sub_category, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk):
-        """
-        delete a specific sub-category
-        """
-        sub_category = SubCategory.objects.get(pk=pk)
-        sub_category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
 class StoreListView(APIView):
 
     permission_classes = (AllowAny,)
@@ -202,11 +134,24 @@ class OfferItemListView(APIView):
 
     def get (self, request, pk):
         """
-        get all offer items belonging to a specific
-        sub-category
+        get all offer items
         """
-        sub_category = get_object_or_404(SubCategory, pk=pk)
-        offer_items = OfferItem.objects.filter(sub_category=sub_category)
+        offer_items = OfferItem.objects.all()
+        serializers = OfferItemSerializer(offer_items, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+
+class OfferItemListPerCategoryView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def get (self, request, pk):
+        """
+        get all offer items per category
+        """
+        category = get_object_or_404(Category, pk=pk)
+        offer_items = OfferItem.objects.filter(category=category)
         serializers = OfferItemSerializer(offer_items, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
     
@@ -218,12 +163,27 @@ class OfferItemListView(APIView):
         #if request.user.is_authenticated:
         serializer = OfferItemSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            sub_category = get_object_or_404(SubCategory, pk=pk)
-            serializer.validated_data.update(sub_category=sub_category)
+            category = get_object_or_404(Category, pk=pk)
+            serializer.validated_data.update(category=category)
             offer_item = OfferItem.objects.create(**serializer.validated_data)
             serializer = OfferItemSerializer(offer_item)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OfferItemListPerStoreView(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def get (self, request, pk):
+        """
+        get all offer items per store
+        """
+        store = get_object_or_404(Store, pk=pk)
+        offer_items = OfferItem.objects.filter(store=store)
+        serializers = OfferItemSerializer(offer_items, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
 
 class OfferItemDetailView(APIView):
 

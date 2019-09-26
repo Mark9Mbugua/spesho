@@ -14,29 +14,14 @@ def hex_uuid ():
 
 class Category(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=hex_uuid, editable=False)
-    category_name = models.CharField(max_length=30, blank=False, null=False)
+    category_name = models.CharField(max_length=50, blank=False, null=False)
+    description = models.TextField(null=True, blank=False)
 
     def __str__(self):
         return self.category_name
 
     # Method to save categories
     def save_category (self):
-        return self.save()
-
-class SubCategory(models.Model):
-    """
-    One category may have several
-    sub categories
-    """
-    id = models.UUIDField(primary_key=True, unique=True, default=hex_uuid, editable=False)
-    sub_category_name = models.CharField(max_length=50, blank=False, null=False)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.sub_category_name
-
-    # Method to save sub_categories
-    def save_sub_category (self):
         return self.save()
 
 
@@ -67,8 +52,8 @@ class OfferItem(models.Model):
     offer_expired = models.BooleanField(default=False)
     front_page = models.BooleanField(default=False)
     offer_expiry_date = models.DateField(auto_now=False, auto_now_add=False)
-    sub_category = models.ForeignKey(SubCategory, on_delete=models.CASCADE)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store')
     src = models.ImageField(upload_to='images/items', null=False, blank=False)
     src_thumbnail = ImageSpecField(source='src',
                                       processors=[ResizeToFill(100, 50)],
