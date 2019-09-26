@@ -9,20 +9,7 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'category_name',
-        )
-
-
-class SubCategorySerializer(serializers.ModelSerializer):
-    id = serializers.CharField(allow_blank=False, allow_null=False, read_only=True)
-    sub_category_name = serializers.CharField(allow_blank=False,  allow_null=False)
-    category = CategorySerializer(read_only=True)
-
-    class Meta:
-        model = SubCategory
-        fields = (
-            'id',
-            'sub_category_name',
-            'category',
+            'description',
         )
 
 class StoreSerializer(serializers.ModelSerializer):
@@ -46,7 +33,7 @@ class OfferItemSerializer(serializers.ModelSerializer):
     new_price = serializers.IntegerField(allow_null=False)
     offer_expired = serializers.BooleanField(required=True)
     front_page = serializers.BooleanField(required=True)
-    sub_category = SubCategorySerializer(read_only=True)
+    category = CategorySerializer(read_only=True)
     store = StoreSerializer(read_only=True)
 
     class Meta:
@@ -60,7 +47,7 @@ class OfferItemSerializer(serializers.ModelSerializer):
             'new_price',
             'offer_expired',
             'offer_expiry_date',
-            'sub_category',
+            'category',
             'store',
             'front_page',
             'src',
