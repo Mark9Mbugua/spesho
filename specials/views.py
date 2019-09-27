@@ -160,7 +160,6 @@ class OfferItemListPerCategoryView(APIView):
         """
         post an offer item
         """
-        #if request.user.is_authenticated:
         serializer = OfferItemSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             category = get_object_or_404(Category, pk=pk)
