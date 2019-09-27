@@ -89,13 +89,11 @@ class StoreListView(APIView):
         """
         post a store
         """
-        #if request.user.is_authenticated:
         serializer = StoreSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        #return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class StoreDetailView(APIView):
