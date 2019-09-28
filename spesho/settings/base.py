@@ -29,7 +29,7 @@ DEBUG = config('DEV_ENV_BOOL')
 ALLOWED_HOSTS = config('DEV_ALLOWED_HOSTS')
 
 
-# Application definition
+# App definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
