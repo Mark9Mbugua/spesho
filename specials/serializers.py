@@ -16,7 +16,7 @@ class StoreSerializer(serializers.ModelSerializer):
     id = serializers.CharField(allow_blank=False, allow_null=False, read_only=True)
 
     class Meta:
-        model = Category
+        model = Store
         fields = (
             'id',
             'store_name',
@@ -25,13 +25,12 @@ class StoreSerializer(serializers.ModelSerializer):
 
 class OfferItemSerializer(serializers.ModelSerializer):
     id = serializers.CharField(allow_blank=False, allow_null=False, read_only=True)
-    item_name = serializers.CharField(allow_blank=False,  allow_null=False)
+    deal_title = serializers.CharField(allow_blank=False,  allow_null=False)
+    deal_url = serializers.URLField(allow_blank=True, allow_null=True)
+    brand = serializers.CharField(allow_blank=True,  allow_null=True)
     description = serializers.CharField(allow_blank=False, allow_null=True)
     src = serializers.ImageField(max_length=None, allow_empty_file=False, use_url=True)
-    original_price = serializers.IntegerField(allow_null=False)
-    offer = serializers.IntegerField(allow_null=False, min_value=0, max_value=100)
-    new_price = serializers.IntegerField(allow_null=False)
-    offer_expired = serializers.BooleanField(required=True)
+    price = serializers.IntegerField(allow_null=False)
     front_page = serializers.BooleanField(required=True)
     category = CategorySerializer(read_only=True)
     store = StoreSerializer(read_only=True)
@@ -40,13 +39,11 @@ class OfferItemSerializer(serializers.ModelSerializer):
         model = OfferItem
         fields = (
             'id',
-            'item_name',
+            'deal_title',
             'description',
-            'original_price',
-            'offer',
-            'new_price',
-            'offer_expired',
-            'offer_expiry_date',
+            'deal_url',
+            'brand',
+            'price',
             'category',
             'store',
             'front_page',

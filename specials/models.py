@@ -43,17 +43,14 @@ class OfferItem(models.Model):
     one sub category may have several items(FK)
     """
     id = models.UUIDField(primary_key=True, unique=True, default=hex_uuid, editable=False)
-    item_name = models.CharField(max_length=50, blank=False, null=False)
-    description = models.TextField(null=True, blank=False)
-    original_price = models.PositiveIntegerField(blank=False, null=False)
-    offer = models.IntegerField(validators=[MinValueValidator(0),
-                                                MaxValueValidator(100)])
-    new_price = models.PositiveIntegerField(blank=False, null=False)
-    offer_expired = models.BooleanField(default=False)
+    deal_title = models.CharField(max_length=250, blank=False, null=False)
+    deal_url = models.URLField(max_length=250, blank=True, null=True)
+    description = models.TextField(null=False, blank=False)
+    price = models.PositiveIntegerField(blank=False, null=False)
+    brand = models.CharField(max_length=250, blank=True, null=True)
     front_page = models.BooleanField(default=False)
-    offer_expiry_date = models.DateField(auto_now=False, auto_now_add=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='store')
+    store = models.ForeignKey(Store, on_delete=models.SET_NULL, related_name='store', blank=True, null=True)
     src = models.ImageField(upload_to='images/items', null=False, blank=False)
     src_thumbnail = ImageSpecField(source='src',
                                       processors=[ResizeToFill(100, 50)],
@@ -65,7 +62,7 @@ class OfferItem(models.Model):
         ordering = ['-published_at']
 
     def __str__(self):
-        return self.item_name
+        return self.deal_title
 
     # Method to save offer items
     def save_offer_item (self):

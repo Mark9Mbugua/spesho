@@ -132,7 +132,7 @@ class OfferItemListView(APIView):
 
     permission_classes = (AllowAny,)
 
-    def get (self, request, pk):
+    def get (self, request):
         """
         get all offer items
         """
