@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from decouple import config, Csv
+from corsheaders.defaults import default_methods, default_headers
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -41,12 +42,14 @@ INSTALLED_APPS = [
     'imagekit',
     'phonenumber_field',
     'minio_storage',
+    'corsheaders',
     #apps
     'accounts',
     'specials',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -105,6 +108,11 @@ MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000 /minio/dev-media-items-bucket'
 MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
 MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
 MINIO_STORAGE_STATIC_USE_PRESIGNED = True
+
+# CORS Configuration
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_METHODS = list(default_methods)
+CORS_ALLOW_HEADERS = list(default_headers)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
