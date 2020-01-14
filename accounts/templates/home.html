@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  Hi!
+
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+
+{% endblock %}
