@@ -34,13 +34,13 @@ class CategoryListView(APIView):
         """
         post a category
         """
-        #if request.user.is_authenticated:
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        #return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if request.user.is_authenticated:
+            serializer = CategorySerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CategoryDetailView(APIView):
@@ -57,20 +57,24 @@ class CategoryDetailView(APIView):
         """
         Update a specific category
         """
-        category = Category.objects.get(pk=pk)
-        serializer = CategorySerializer(category, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            category = Category.objects.get(pk=pk)
+            serializer = CategorySerializer(category, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, pk):
         """
         delete a specific category
         """
-        category = Category.objects.get(pk=pk)
-        category.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            category = Category.objects.get(pk=pk)
+            category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class StoreListView(APIView):
@@ -89,13 +93,13 @@ class StoreListView(APIView):
         """
         post a store
         """
-        #if request.user.is_authenticated:
-        serializer = StoreSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        #return Response(status=status.HTTP_401_UNAUTHORIZED)
+        if request.user.is_authenticated:
+            serializer = StoreSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class StoreDetailView(APIView):
@@ -112,20 +116,24 @@ class StoreDetailView(APIView):
         """
         Update a specific store
         """
-        store = Store.objects.get(pk=pk)
-        serializer = StoreSerializer(store, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            store = Store.objects.get(pk=pk)
+            serializer = StoreSerializer(store, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, pk):
         """
         delete a specific store
         """
-        store = Store.objects.get(pk=pk)
-        store.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            store = Store.objects.get(pk=pk)
+            store.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class OfferItemListView(APIView):
@@ -160,15 +168,16 @@ class OfferItemListPerCategoryView(APIView):
         """
         post an offer item
         """
-        #if request.user.is_authenticated:
-        serializer = OfferItemSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            category = get_object_or_404(Category, pk=pk)
-            serializer.validated_data.update(category=category)
-            offer_item = OfferItem.objects.create(**serializer.validated_data)
-            serializer = OfferItemSerializer(offer_item)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            serializer = OfferItemSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                category = get_object_or_404(Category, pk=pk)
+                serializer.validated_data.update(category=category)
+                offer_item = OfferItem.objects.create(**serializer.validated_data)
+                serializer = OfferItemSerializer(offer_item)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class OfferItemListPerStoreView(APIView):
@@ -199,17 +208,21 @@ class OfferItemDetailView(APIView):
         """
         Update a specific offer item
         """
-        offer_item = OfferItem.objects.get(pk=pk)
-        serializer = OfferItemSerializer(offer_item, data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if request.user.is_authenticated:
+            offer_item = OfferItem.objects.get(pk=pk)
+            serializer = OfferItemSerializer(offer_item, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def delete(self, request, pk):
         """
         delete a specific offer item
         """
-        offer_item = OfferItem.objects.get(pk=pk)
-        offer_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if request.user.is_authenticated:
+            offer_item = OfferItem.objects.get(pk=pk)
+            offer_item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
