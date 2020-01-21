@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     #apps
     'accounts',
     'specials',
+    'comments',
 ]
 
 SITE_ID = 1
