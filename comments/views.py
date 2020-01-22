@@ -24,7 +24,7 @@ from rest_framework.permissions import (
 
     )
 
-specials.permissions import IsOwnerOrReadOnly
+from specials.permissions import IsOwnerOrReadOnly
 from specials.pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
 
 from .models import Comment
