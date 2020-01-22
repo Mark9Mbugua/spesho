@@ -25,11 +25,13 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from .pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
 
 
 class CategoryListView(APIView):
 
     permission_classes = (AllowAny,)
+    pagination_class = ItemPageNumberPagination
 
     def get (self, request):
         """
@@ -89,6 +91,7 @@ class CategoryDetailView(APIView):
 class StoreListView(APIView):
 
     permission_classes = (AllowAny,)
+    pagination_class = ItemPageNumberPagination
 
     def get (self, request):
         """
@@ -148,6 +151,7 @@ class StoreDetailView(APIView):
 class ItemListView(APIView):
 
     permission_classes = (AllowAny,)
+    pagination_class = ItemPageNumberPagination
 
     def get (self, request):
         """
@@ -162,6 +166,7 @@ class ItemListView(APIView):
 class ItemListPerCategoryView(APIView):
 
     permission_classes = (AllowAny,)
+    pagination_class = ItemPageNumberPagination
 
     def get (self, request, pk):
         """
@@ -192,6 +197,7 @@ class ItemListPerCategoryView(APIView):
 class ItemListPerStoreView(APIView):
 
     permission_classes = (AllowAny,)
+    pagination_class = ItemPageNumberPagination
 
     def get (self, request, pk):
         """

@@ -25,7 +25,7 @@ from rest_framework.permissions import (
     )
 
 # from posts.api.permissions import IsOwnerOrReadOnly
-# from posts.api.pagination import PostLimitOffsetPagination, PostPageNumberPagination
+from specials.pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
 
 from .models import Comment
 
@@ -38,7 +38,6 @@ from .serializers import (
 
 class CommentCreateAPIView(CreateAPIView):
     queryset = Comment.objects.all()
-    #serializer_class = PostCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -58,7 +57,7 @@ class CommentListAPIView(ListAPIView):
     permission_classes = [AllowAny]
     filter_backends= [SearchFilter, OrderingFilter]
     search_fields = ['content', 'user__first_name']
-    # pagination_class = PostPageNumberPagination #PageNumberPagination
+    pagination_class = ItemPageNumberPagination #PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
         #queryset_list = super(PostListAPIView, self).get_queryset(*args, **kwargs)
