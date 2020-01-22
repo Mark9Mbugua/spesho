@@ -24,7 +24,7 @@ from rest_framework.permissions import (
 
     )
 
-# from posts.api.permissions import IsOwnerOrReadOnly
+specials.permissions import IsOwnerOrReadOnly
 from specials.pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
 
 from .models import Comment
@@ -75,7 +75,7 @@ class CommentListAPIView(ListAPIView):
 class CommentDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Comment.objects.filter(id__gte=0)
     serializer_class = CommentDetailSerializer
-    # permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
