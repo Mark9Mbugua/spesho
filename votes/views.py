@@ -33,7 +33,7 @@ from .models import Vote
 
 from .serializers import (
     VoteListSerializer,
-    # CommentDetailSerializer,
+    VoteDetailSerializer,
     create_vote_serializer
     )
 
@@ -74,3 +74,15 @@ class VoteListAPIView(ListAPIView):
                     Q(user__last_name__icontains=query)
                     ).distinct()
         return queryset_list
+
+
+class VoteDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
+    queryset = Vote.objects.filter(id__gte=0)
+    serializer_class = VoteDetailSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
