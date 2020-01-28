@@ -61,12 +61,9 @@ def create_vote_serializer(model_type=None, id=None, user=None):
 
 
 class VoteListSerializer(ModelSerializer):
-    # url = HyperlinkedIdentityField(
-    #     view_name='comments:thread')
     class Meta:
         model = Vote
         fields = [
-            # 'url',
             'id',
             'vote_type',
             'created_at',
@@ -103,3 +100,22 @@ class VoteCountSerializer(ModelSerializer):
     
     def get_dislikes_count(self, obj):
         return obj.dislikes().count()
+
+
+class VoteDetailSerializer(ModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Vote
+        fields = [
+            'id',
+            'user',
+            'vote_type',
+            # 'content_type',
+            # 'object_id',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = [
+            # 'content_type',
+            # 'object_id',
+        ]
