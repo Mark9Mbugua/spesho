@@ -8,10 +8,11 @@ from rest_framework.serializers import (
     ValidationError
     )
 
-
 from .models import Comment
 from specials.models import Item
 from accounts.serializers import UserSerializer
+from votes.serializers import VoteSerializer, VoteCountSerializer
+from votes.models import Vote
 
 User = get_user_model()
 
@@ -68,16 +69,16 @@ class CommentListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='comments:thread')
     reply_count = SerializerMethodField()
+    votes = SerializerMethodField()
+    
     class Meta:
         model = Comment
         fields = [
             'url',
             'id',
-            # 'content_type',
-            # 'object_id',
-            # 'parent',
             'content',
             'reply_count',
+            'votes',
             'timestamp',
         ]
     
@@ -85,6 +86,12 @@ class CommentListSerializer(ModelSerializer):
         if obj.is_parent:
             return obj.children().count()
         return 0
+    
+    def get_votes(self, obj):
+        v_qs = Vote.objects.filter_by_instance(obj)
+        votes = VoteCountSerializer(v_qs, many=True).data
+        return votes
+        
 
 class CommentSerializer(ModelSerializer):
     reply_count = SerializerMethodField()
