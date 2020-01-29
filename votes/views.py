@@ -24,8 +24,6 @@ from rest_framework.permissions import (
 
     )
 
-from rest_framework.serializers import ValidationError
-
 from specials.permissions import IsOwnerOrReadOnly
 from specials.pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
 
@@ -38,17 +36,17 @@ from .serializers import (
     )
 
 
-class VoteCreateAPIView(CreateAPIView):
+class VoteCreateAPIView(DestroyModelMixin, CreateAPIView):
     queryset = Vote.objects.all()
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         model_type = self.request.GET.get("type")
         id = self.request.GET.get("id")
-        user_voted = Vote.objects.filter(user=self.request.user, 
+        vote = Vote.objects.filter(user=self.request.user, 
                         vote_type__gt=0, object_id=id)
-        if user_voted.exists():
-            raise ValidationError("User cannot upvote/downvote more than once")
+        if vote.exists():
+            vote.delete()
         return create_vote_serializer(
                 model_type=model_type, 
                 id=id,
@@ -64,7 +62,6 @@ class VoteListAPIView(ListAPIView):
     pagination_class = ItemPageNumberPagination #PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
-        #queryset_list = super(PostListAPIView, self).get_queryset(*args, **kwargs)
         queryset_list = Vote.objects.filter(id__gte=0) #filter(user=self.request.user)
         query = self.request.GET.get("q")
         if query:

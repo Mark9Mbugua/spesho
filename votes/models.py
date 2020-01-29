@@ -67,8 +67,8 @@ class Vote(models.Model):
     def save_vote (self):
         return self.save()
     
-    def likes(self): # likes
+    def likes(self, object_id=None): # likes
         return Vote.objects.filter(vote_type=1)
 
-    def dislikes(self): # dislikes
+    def dislikes(self, object_id=None): # dislikes
         return Vote.objects.filter(vote_type=2)

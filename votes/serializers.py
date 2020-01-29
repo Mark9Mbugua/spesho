@@ -27,10 +27,6 @@ def create_vote_serializer(model_type=None, id=None, user=None):
         def __init__(self, *args, **kwargs):
             self.model_type = model_type
             self.id = id
-            # if parent_id:
-            #     parent_qs = Vote.objects.filter(id=parent_id)
-            #     if parent_qs.exists() and parent_qs.count() ==1:
-            #         self.parent_obj = parent_qs.first()
             return super(VoteCreateSerializer, self).__init__(*args, **kwargs)
 
         def validate(self, data):
@@ -66,6 +62,7 @@ class VoteListSerializer(ModelSerializer):
         fields = [
             'id',
             'vote_type',
+            'object_id',
             'created_at',
             'updated_at'
         ]
@@ -104,18 +101,19 @@ class VoteCountSerializer(ModelSerializer):
 
 class VoteDetailSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
+
     class Meta:
         model = Vote
         fields = [
             'id',
             'user',
             'vote_type',
-            # 'content_type',
-            # 'object_id',
+            'content_type',
+            'object_id',
             'created_at',
             'updated_at',
         ]
         read_only_fields = [
-            # 'content_type',
-            # 'object_id',
+            'content_type',
+            'object_id',
         ]

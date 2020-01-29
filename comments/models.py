@@ -7,6 +7,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.db import models
 
+from votes.models import Vote
+
 def hex_uuid():
     """
     converts a uuid into a hex
@@ -78,3 +80,18 @@ class Comment(models.Model):
         if self.parent is not None:
             return False
         return True
+    
+
+    @property
+    def votes(self):
+        instance = self
+        qs = Vote.objects.filter_by_instance(instance)
+        return qs
+    
+    @property
+    def likes(self): # likes
+        return self.votes.filter(vote_type=1)
+
+    @property
+    def dislikes(self): # dislikes
+        return self.votes.filter(vote_type=2)

@@ -69,7 +69,8 @@ class CommentListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='comments:thread')
     reply_count = SerializerMethodField()
-    votes = SerializerMethodField()
+    likes_count = SerializerMethodField()
+    dislikes_count = SerializerMethodField()
     
     class Meta:
         model = Comment
@@ -78,7 +79,8 @@ class CommentListSerializer(ModelSerializer):
             'id',
             'content',
             'reply_count',
-            'votes',
+            'likes_count',
+            'dislikes_count',
             'timestamp',
         ]
     
@@ -87,11 +89,11 @@ class CommentListSerializer(ModelSerializer):
             return obj.children().count()
         return 0
     
-    def get_votes(self, obj):
-        v_qs = Vote.objects.filter_by_instance(obj)
-        votes = VoteCountSerializer(v_qs, many=True).data
-        return votes
-        
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_dislikes_count(self, obj):
+        return obj.dislikes.count()
 
 class CommentSerializer(ModelSerializer):
     reply_count = SerializerMethodField()
@@ -125,30 +127,31 @@ class CommentChildSerializer(ModelSerializer):
         ]
 
 
-
 class CommentDetailSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
     reply_count = SerializerMethodField()
     content_object_url = SerializerMethodField()
     replies =   SerializerMethodField()
+    likes_count = SerializerMethodField()
+    dislikes_count = SerializerMethodField()
+
     class Meta:
         model = Comment
         fields = [
             'id',
             'user',
-            #'content_type',
-            #'object_id',
             'content',
             'reply_count',
             'replies',
+            'likes_count',
+            'dislikes_count',
             'timestamp',
             'content_object_url',
         ]
         read_only_fields = [
-            #'content_type',
-            #'object_id',
             'reply_count',
-            'replies',
+            'likes_count',
+            'dislikes_count',
         ]
 
     def get_content_object_url(self, obj):
@@ -166,3 +169,9 @@ class CommentDetailSerializer(ModelSerializer):
         if obj.is_parent:
             return obj.children().count()
         return 0
+    
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_dislikes_count(self, obj):
+        return obj.dislikes.count()
