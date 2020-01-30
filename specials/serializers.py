@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.serializers import SerializerMethodField
 
 from accounts.serializers import UserSerializer
 from comments.serializers import CommentSerializer 
@@ -40,6 +41,8 @@ class ItemSerializer(serializers.ModelSerializer):
     front_page = serializers.BooleanField(required=True)
     category = CategorySerializer(read_only=True)
     store = StoreSerializer(read_only=True)
+    likes_count = SerializerMethodField()
+    dislikes_count = SerializerMethodField()
 
     class Meta:
         model = Item
@@ -55,18 +58,25 @@ class ItemSerializer(serializers.ModelSerializer):
             'store',
             'front_page',
             'src',
+            'likes_count',
+            'dislikes_count',
             'published_at',
         )
-        # lookup_field = 'slug'
-        # extra_kwargs = {
-        #     'url': {'lookup_field': 'slug'}
-        # }
+    
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_dislikes_count(self, obj):
+        return obj.dislikes.count()
+
 
 
 class OffereItemDetailSerializer(serializers.ModelSerializer):
     #url = post_detail_url
     # user = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
+    likes_count = SerializerMethodField()
+    dislikes_count = SerializerMethodField()
 
     class Meta:
         model = Item
@@ -82,11 +92,19 @@ class OffereItemDetailSerializer(serializers.ModelSerializer):
             'store',
             'front_page',
             'src',
+            'comments',
+            'likes_count',
+            'dislikes_count',
             'published_at',
-            'comments'
         ]
 
     def get_comments(self, obj):
         c_qs = Comment.objects.filter_by_instance(obj)
         comments = CommentSerializer(c_qs, many=True).data
         return comments
+    
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_dislikes_count(self, obj):
+        return obj.dislikes.count()
