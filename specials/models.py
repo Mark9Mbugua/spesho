@@ -14,6 +14,7 @@ import datetime
 from markdown_deux import markdown
 
 from comments.models import Comment
+from votes.models import Vote
 from .utils import get_read_time
 
 def hex_uuid ():
@@ -105,6 +106,20 @@ class Item(models.Model):
         instance = self
         content_type = ContentType.objects.get_for_model(instance.__class__)
         return content_type
+    
+    @property
+    def votes(self):
+        instance = self
+        qs = Vote.objects.filter_by_instance(instance)
+        return qs
+    
+    @property
+    def likes(self): # likes
+        return self.votes.filter(vote_type=1)
+
+    @property
+    def dislikes(self): # dislikes
+        return self.votes.filter(vote_type=2)
 
 
 def create_slug(instance, new_slug=None):
