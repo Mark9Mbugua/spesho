@@ -81,7 +81,6 @@ class Comment(models.Model):
             return False
         return True
     
-
     @property
     def votes(self):
         instance = self
