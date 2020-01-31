@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls import url
 from rest_framework.documentation import include_docs_urls
+from search_indexes import urls as search_index_urls
 
 from rest_framework.renderers import CoreJSONRenderer
 from rest_framework.schemas import get_schema_view
@@ -22,6 +23,8 @@ urlpatterns = [
     path('api/v1/accounts/login', obtain_jwt_token),
     path('api/v1/refresh/token/', refresh_jwt_token),
     path('docs/', include_docs_urls(title='My API title')),
-    path('api/auth-jwt-verify/', verify_jwt_token)
+    path('api/auth-jwt-verify/', verify_jwt_token),
+    # Search URLs
+    path('api/v1/search/', include(search_index_urls)),
 ]
  
