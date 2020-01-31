@@ -31,27 +31,33 @@ class ItemDocument(Document):
 
     deal_title = fields.TextField(
         analyzer=html_strip,
+        fielddata=True,
         fields={
             'raw': KeywordField(),
+            'suggest': fields.CompletionField()
         }
     )
 
-    slug = fields.TextField()
-    deal_url = fields.TextField()
+    slug = fields.TextField(fielddata=True,)
+    deal_url = fields.TextField(fielddata=True,)
     
     description = fields.TextField(
         analyzer=html_strip,
+        fielddata=True,
         fields={
             'raw': KeywordField(),
+            'suggest': fields.CompletionField()
         }
     )
 
-    price = fields.FloatField()
+    price = fields.IntegerField()
     front_page = fields.BooleanField()
     brand = fields.TextField(
         analyzer=html_strip,
+        fielddata=True,
         fields={
             'raw': KeywordField(),
+            'suggest': fields.CompletionField()
         }
     )
 
@@ -60,14 +66,17 @@ class ItemDocument(Document):
         properties={
             'category_name': fields.TextField(
                 analyzer=html_strip,
+                fielddata=True,
                 fields={
                     'raw': KeywordField(),
+                    'suggest': fields.CompletionField()
                 }
             ),
             'description': fields.TextField(
                 analyzer=html_strip,
+                fielddata=True,
                 fields={
-                    'raw': KeywordField(),
+                    'raw': KeywordField()
                 }
             )
         }
@@ -78,14 +87,17 @@ class ItemDocument(Document):
         properties={
             'store_name': fields.TextField(
                 analyzer=html_strip,
+                fielddata=True,
                 fields={
                     'raw': KeywordField(),
+                    'suggest': fields.CompletionField()
                 }
             ),
             'description': fields.TextField(
                 analyzer=html_strip,
+                fielddata=True,
                 fields={
-                    'raw': KeywordField(),
+                    'raw': KeywordField()
                 }
             )
         }
