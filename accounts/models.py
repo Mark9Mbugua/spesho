@@ -15,7 +15,7 @@ def hex_uuid():
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name=None, password=None, last_name=None, is_active=True,
+    def create_user(self, email, first_name=None, password=None, last_name=None, is_active=False,
                     is_staff=False, is_admin=False, verified=False):
         if not email:
             raise ValueError("Users must have an email address")

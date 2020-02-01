@@ -37,7 +37,7 @@ class UserCreate(APIView):
     def post(request):
         """
         gets data from request then checks whether the user_data
-        is valid before ot saves it to the database
+        is valid before it saves it to the database
         :param request:
         :return: response status {error HTTP_400 or success HTTP_201}
         """
@@ -45,10 +45,10 @@ class UserCreate(APIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             if user:
-                # cleaned_user = serializer.data
-                # email = cleaned_user['email']
-                # name = cleaned_user['first_name']
-                # send_welcome_email(name, email, user)
+                cleaned_user = serializer.data
+                email = cleaned_user['email']
+                name = cleaned_user['first_name']
+                send_welcome_email(name, email, user)
                 return Response(serializer.data,
                                 status=status.HTTP_201_CREATED)
 
@@ -111,7 +111,7 @@ class ProfileView(APIView):
         return Response(status=status.HTTP_403_FORBIDDEN)
 
 
-    def put(self, request):
+    def patch(self, request):
 
         """
         update user profile
@@ -131,7 +131,7 @@ class ProfileView(APIView):
 class UpdatePhoneNumberView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def put (self, request):
+    def patch (self, request):
         """
         update user profile
         :param request:
@@ -145,7 +145,7 @@ class UpdatePhoneNumberView(APIView):
             current_user.confirmed_code = False
             serializers.save()
             print(code,'user code here-------------------')
-            if phone_number is not None and send_confirmation_code(code, phone_number.raw_input) is 'sent' or 'queued':
+            if phone_number is not None and send_confirmation_code(code, phone_number) is 'sent' or 'queued':
                 current_user.verification_code = code
                 current_user.save()
                 return Response(serializers.data, status=status.HTTP_200_OK)
