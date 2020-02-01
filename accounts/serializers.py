@@ -84,7 +84,7 @@ class ProfileSerializers(serializers.ModelSerializer):
                                 required=False)
     avatar = serializers.ImageField(max_length=None, allow_empty_file=True, allow_null=True, use_url=True)
     birth_date = serializers.DateField(input_formats=['%Y-%m-%d', ], allow_null=True)
-    #phone_number = PhoneNumberField(validators=[UniqueValidator(queryset=Profile.objects.all())])
+    phone_number = PhoneNumberField(validators=[UniqueValidator(queryset=Profile.objects.all())])
     gender = serializers.ChoiceField(GENDER_CHOICE, allow_null=True, allow_blank=True)
 
     class Meta:
