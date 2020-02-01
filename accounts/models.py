@@ -136,7 +136,7 @@ class Profile(models.Model):
     bio = models.TextField(blank=True, null=True)
     avatar = models.ImageField(upload_to='users/profile', null=True, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    phone_number = PhoneNumberField(null=True, blank=True)
     gender = models.CharField(choices=GENDER_CHOICE, max_length=6, blank=True, null=True)
     published_date = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateField(auto_now=True)

@@ -49,6 +49,32 @@ class Store(models.Model):
     def save_category (self):
         return self.save()
 
+class ItemManager(models.Manager):
+    def all(self):
+        qs = super(ItemManager, self).all()
+        return qs
+
+    def create_item(self, category_id, store_id, deal_title, deal_url, description, 
+                        price, original_price, discount, brand, front_page, src, user):        
+        category = Category.objects.get(id=category_id)
+        store = Store.objects.get(id=store_id)
+        
+        instance = self.model()
+        instance.category = category
+        instance.store = store
+        instance.user = user
+        instance.deal_title = deal_title
+        instance.deal_url = deal_url
+        instance.description = description
+        instance.price = price
+        instance.original_price = original_price
+        instance.discount = discount
+        instance.brand = brand
+        instance.front_page = front_page
+        instance.src = src
+        instance.save()
+        return instance
+
 
 class Item(models.Model):
     """
@@ -56,13 +82,16 @@ class Item(models.Model):
     one sub category may have several items(FK)
     """
     id = models.UUIDField(primary_key=True, unique=True, default=hex_uuid, editable=False)
+    user = models.ForeignKey('accounts.User', on_delete=models.CASCADE)
     deal_title = models.CharField(max_length=250, blank=False, null=False)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, max_length=255)
     deal_url = models.URLField(max_length=250, blank=True, null=True)
     description = models.TextField(null=False, blank=False)
     price = models.PositiveIntegerField(blank=False, null=False)
+    original_price = models.PositiveIntegerField(blank=True, null=True)
+    discount = models.DecimalField(decimal_places=2, max_digits=100, blank=True, null=True)
     brand = models.CharField(max_length=250, blank=True, null=True)
-    front_page = models.BooleanField(default=False)
+    front_page = models.BooleanField(default=False, null=True, blank=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
     store = models.ForeignKey(Store, on_delete=models.SET_NULL, related_name='store', blank=True, null=True)
     src = models.ImageField(upload_to='images/items', null=False, blank=False)
@@ -71,6 +100,8 @@ class Item(models.Model):
                                       format='JPEG',
                                       options={'quality': 60})
     published_at = models.DateTimeField(auto_now_add=True)
+
+    objects = ItemManager()
 
     class Meta:
         ordering = ['-published_at']
