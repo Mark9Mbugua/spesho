@@ -10,6 +10,7 @@ from django.http import Http404
 from rest_framework.response import Response
 from rest_framework.parsers import FormParser, MultiPartParser, JSONParser
 from rest_framework.views import APIView
+from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
 from rest_framework.generics import (
     CreateAPIView,
     DestroyAPIView,
@@ -17,12 +18,13 @@ from rest_framework.generics import (
     UpdateAPIView,
     RetrieveAPIView,
     RetrieveUpdateAPIView
-    )
+)
 
 from .models import *
 from .serializers import *
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
+from specials.permissions import IsOwnerOrReadOnly
 from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
 from .pagination import ItemLimitOffsetPagination, ItemPageNumberPagination
@@ -162,6 +164,20 @@ class ItemListView(APIView):
         return Response(serializers.data, status=status.HTTP_200_OK)
 
 
+class ItemCreateAPIView(CreateAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        category_id = self.request.GET.get("category")
+        store_id = self.request.GET.get("store")
+        return create_item_serializer(
+                category_id=category_id, 
+                store_id = store_id, 
+                user=self.request.user
+                )
+
 
 class ItemListPerCategoryView(APIView):
 
@@ -176,22 +192,6 @@ class ItemListPerCategoryView(APIView):
         offer_items = Item.objects.filter(category=category)
         serializers = ItemSerializer(offer_items, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
-    
-
-    def post(self, request, pk):
-        """
-        post an offer item
-        """
-        if request.user.is_authenticated:
-            serializer = ItemSerializer(data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                category = get_object_or_404(Category, pk=pk)
-                serializer.validated_data.update(category=category)
-                offer_item = Item.objects.create(**serializer.validated_data)
-                serializer = ItemSerializer(offer_item)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ItemListPerStoreView(APIView):
@@ -217,7 +217,6 @@ class ItemDetailView(APIView):
         """
         offer_item = Item.objects.filter(pk=pk)
         serializer = ItemSerializer(offer_item, many=True)
-        lookup_field = 'slug'
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def put(self, request, pk):
@@ -244,8 +243,13 @@ class ItemDetailView(APIView):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
-class ItemDetailAPIView(RetrieveAPIView):
+class ItemDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Item.objects.all()
     serializer_class = OffereItemDetailSerializer
-    # lookup_field = 'slug'
-    permission_classes = [AllowAny]
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def patch(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
