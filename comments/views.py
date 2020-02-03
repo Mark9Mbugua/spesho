@@ -60,7 +60,6 @@ class CommentListAPIView(ListAPIView):
     pagination_class = ItemPageNumberPagination #PageNumberPagination
 
     def get_queryset(self, *args, **kwargs):
-        #queryset_list = super(PostListAPIView, self).get_queryset(*args, **kwargs)
         queryset_list = Comment.objects.filter(id__gte=0) #filter(user=self.request.user)
         query = self.request.GET.get("q")
         if query:

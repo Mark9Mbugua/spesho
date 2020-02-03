@@ -170,8 +170,9 @@ class ItemCreateAPIView(CreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        category_id = self.request.GET.get("category")
-        store_id = self.request.GET.get("store")
+        category_id = self.request.GET.get("category_id")
+        store_id = self.request.GET.get("store_id")
+        
         return create_item_serializer(
                 category_id=category_id, 
                 store_id = store_id, 
@@ -207,40 +208,6 @@ class ItemListPerStoreView(APIView):
         offer_items = Item.objects.filter(store=store)
         serializers = ItemSerializer(offer_items, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
-
-
-class ItemDetailView(APIView):
-
-    def get(self, request, pk):
-        """
-        Checking a specific offer item
-        """
-        offer_item = Item.objects.filter(pk=pk)
-        serializer = ItemSerializer(offer_item, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, pk):
-        """
-        Update a specific offer item
-        """
-        if request.user.is_authenticated:
-            offer_item = Item.objects.get(pk=pk)
-            serializer = ItemSerializer(offer_item, data=request.data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-    
-    def delete(self, request, pk):
-        """
-        delete a specific offer item
-        """
-        if request.user.is_authenticated:
-            offer_item = Item.objects.get(pk=pk)
-            offer_item.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ItemDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
