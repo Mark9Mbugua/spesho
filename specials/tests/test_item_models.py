@@ -1,0 +1,59 @@
+from django.test import TestCase
+from specials.models import (
+    Category, Store, Item
+)
+from accounts.models import User
+from django.utils import timezone
+from django.urls import reverse
+
+
+class ItemsTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(
+            email='testuser@gmail.com', 
+            first_name='Tuma',
+            last_name='Fare',
+            verified=True,
+            is_active=True,
+            staff=False,
+            admin=False
+        )
+        self.category = Category.objects.create(
+            category_name='Travel',
+            description='Travel all over the world without stretching your money to the limit'
+        )
+
+        self.store = Store.objects.create(
+            store_name='Travelstart',
+            description='Get quality and irresistible offers at Travelstart'
+        )
+        self.item = Item.objects.create(
+            user=self.user,
+            deal_title="London Flights",
+            deal_url="http://127.0.0.1:8000/",
+            description="Cheap London flights.Offer ends on 29th February 2020.Hurry!",
+            price=50000,
+            original_price=100000,
+            discount=50.00,
+            brand="Travalstart",
+            category=self.category,
+            store=self.store,
+            src= "http://127.0.0.1:9000/dev-media-items-bucket/images/items/Ctroniq_32_bUhbjO6.jpg"
+
+        )
+
+    def test_create_category(self):
+        test_category = self.category
+        self.assertTrue(isinstance(test_category, Category))
+        self.assertEqual(test_category.__str__(), test_category.category_name)
+
+    def test_create_store(self):
+        test_store = self.store
+        self.assertTrue(isinstance(test_store, Store))
+        self.assertEqual(test_store.__str__(), test_store.store_name)
+
+    def test_create_item(self):
+        test_item = self.item
+        self.assertTrue(isinstance(test_item, Item))
+        self.assertEqual(test_item.__str__(), test_item.deal_title)
