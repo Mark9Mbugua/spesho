@@ -58,10 +58,10 @@ class Vote(models.Model):
         ordering = ['-created_at']
     
     def __unicode__(self):  
-        return self.vote_user.first_name
+        return self.vote_user.username
 
     def __str__(self):
-        return self.user.first_name + " " + str(self.vote_type)
+        return self.user.username + " " + str(self.vote_type)
 
     # Method to save votes
     def save_vote (self):

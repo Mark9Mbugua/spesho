@@ -23,7 +23,6 @@ class ItemsTest(TestCase):
             category_name='Travel',
             description='Travel all over the world without stretching your money to the limit'
         )
-
         self.store = Store.objects.create(
             store_name='Travelstart',
             description='Get quality and irresistible offers at Travelstart'
