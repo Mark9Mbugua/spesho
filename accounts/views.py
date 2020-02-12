@@ -43,14 +43,14 @@ class UserCreate(APIView):
         """
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            if user:
-                cleaned_user = serializer.data
-                email = cleaned_user['email']
-                name = cleaned_user['first_name']
-                send_welcome_email(name, email, user)
-                return Response(serializer.data,
-                                status=status.HTTP_201_CREATED)
+            serializer.save()
+            # if user:
+            #     cleaned_user = serializer.data
+            #     email = cleaned_user['email']
+            #     name = cleaned_user['first_name']
+            #     send_welcome_email(name, email, user)
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

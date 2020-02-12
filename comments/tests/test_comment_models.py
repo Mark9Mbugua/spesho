@@ -64,10 +64,10 @@ class ItemsTest(TestCase):
         test_user=self.user
         test_comment = self.comment
         self.assertTrue(isinstance(test_comment, Comment))
-        self.assertEqual(test_comment.__str__(), test_user.first_name)
+        self.assertEqual(test_comment.__str__(), test_user.username)
     
     def test_create_reply(self):
         test_user=self.user
         test_reply = self.reply
         self.assertTrue(isinstance(test_reply, Comment))
-        self.assertEqual(test_reply.__str__(), test_user.first_name)
+        self.assertEqual(test_reply.__str__(), test_user.username)

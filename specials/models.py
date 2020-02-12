@@ -117,14 +117,8 @@ class Item(models.Model):
         # self.slug = slugify(self.deal_title)
         super(Item, self).save(*args, **kwargs)
 
-    
-    def get_markdown(self):
-        description = self.description
-        markdown_text = markdown(description)
-        return mark_safe(markdown_text)
-
     def get_api_url(self):
-        return reverse("specials:detail", kwargs={"id": self.id})
+        return reverse("specials:item-detail", kwargs={"id": self.id})
 
     @property
     def comments(self):

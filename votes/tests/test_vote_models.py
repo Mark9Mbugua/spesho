@@ -71,10 +71,10 @@ class ItemsTest(TestCase):
         test_user=self.user
         test_vote = self.item_vote
         self.assertTrue(isinstance(test_vote, Vote))
-        self.assertEqual(test_vote.__str__(), test_user.first_name + " " + str(self.item_vote.vote_type))
+        self.assertEqual(test_vote.__str__(), test_user.username + " " + str(self.item_vote.vote_type))
     
     def test_create_comment_vote(self):
         test_user=self.user
         test_vote = self.comment_vote
         self.assertTrue(isinstance(test_vote, Vote))
-        self.assertEqual(test_vote.__str__(), test_user.first_name + " " + str(self.comment_vote.vote_type))
+        self.assertEqual(test_vote.__str__(), test_user.username + " " + str(self.comment_vote.vote_type))

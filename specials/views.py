@@ -168,6 +168,7 @@ class ItemCreateAPIView(CreateAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated]
+    # permission_classes = (AllowAny,)
 
     def get_serializer_class(self):
         category_id = self.request.GET.get("category_id")

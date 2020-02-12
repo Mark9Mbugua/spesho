@@ -61,10 +61,10 @@ class Comment(models.Model):
 
 
     def __unicode__(self):  
-        return str(self.user.first_name)
+        return str(self.user.username)
 
     def __str__(self):
-        return str(self.user.first_name)
+        return str(self.user.username)
 
     def get_absolute_url(self):
         return reverse("comments:thread", kwargs={"id": self.id})
