@@ -153,7 +153,7 @@ class Profile(models.Model):
     confirmed_code = models.BooleanField(default=False, null=False, blank=True)
 
     def __str__(self):
-        return self.user.first_name
+        return self.user.username
 
 
 

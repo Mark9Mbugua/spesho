@@ -68,20 +68,26 @@ def create_comment_serializer(model_type='item', id=None, parent_id=None, user=N
 class CommentListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='comments:thread')
+    user = UserSerializer(read_only=True)
     reply_count = SerializerMethodField()
     likes_count = SerializerMethodField()
     dislikes_count = SerializerMethodField()
+    created_on = SerializerMethodField()
     
     class Meta:
         model = Comment
         fields = [
             'url',
             'id',
+            'user',
+            'content_type',
+            'object_id',
+            'parent',
             'content',
             'reply_count',
             'likes_count',
             'dislikes_count',
-            'timestamp',
+            'created_on',
         ]
     
     def get_reply_count(self, obj):
@@ -95,8 +101,14 @@ class CommentListSerializer(ModelSerializer):
     def get_dislikes_count(self, obj):
         return obj.dislikes.count()
 
+    def get_created_on(self, obj):
+        return obj.timestamp.strftime("%B %d, %Y, %I:%M %p")
+
 class CommentSerializer(ModelSerializer):
     reply_count = SerializerMethodField()
+    likes_count = SerializerMethodField()
+    dislikes_count = SerializerMethodField()
+    
     class Meta:
         model = Comment
         fields = [
@@ -106,13 +118,28 @@ class CommentSerializer(ModelSerializer):
             'parent',
             'content',
             'reply_count',
+            'likes_count',
+            'dislikes_count',
             'timestamp',
+        ]   
+        read_only_fields = [
+            'object_id',
+            'content_type',
+            'reply_count',
+            'likes_count',
+            'dislikes_count',
         ]
     
     def get_reply_count(self, obj):
         if obj.is_parent:
             return obj.children().count()
         return 0
+    
+    def get_likes_count(self, obj):
+        return obj.likes.count()
+    
+    def get_dislikes_count(self, obj):
+        return obj.dislikes.count()
 
 
 class CommentChildSerializer(ModelSerializer):

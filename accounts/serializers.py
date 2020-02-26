@@ -1,9 +1,17 @@
 from django.db.models import Q
 from django.contrib.auth import get_user_model
-
-from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_jwt.settings import api_settings
+from rest_framework.serializers import  (
+    SerializerMethodField,
+    ModelSerializer,
+    Serializer,
+    EmailField,
+    CharField,
+    ChoiceField,
+    ImageField,
+    DateField,
+)
 from rest_framework.settings import api_settings as time
 from rest_framework.validators import UniqueValidator
 from phonenumber_field.serializerfields import PhoneNumberField
@@ -16,19 +24,21 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 
-class UserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())],
+class UserSerializer(ModelSerializer):
+    email = EmailField(required=True, validators=[UniqueValidator(queryset=User.objects.all())],
                                    trim_whitespace=True)
-    first_name = serializers.CharField(required=True)
-    last_name = serializers.CharField(required=True)
-    username = serializers.CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())],
+    first_name = CharField(required=True)
+    last_name = CharField(required=True)
+    username = CharField(required=True, validators=[UniqueValidator(queryset=User.objects.all())],
                                    trim_whitespace=True)
-    password = serializers.CharField(min_length=8, write_only=True)
+    password = CharField(min_length=8, write_only=True)
+    created_on = SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id','email', 'first_name', 'last_name','username', 'password')
+        fields = ('id','email', 'first_name', 'last_name','username', 'password', 'created_on')
         extra_kwargs = {'password': {'write_only': True}}
+
 
     def create(self, validated_data):
         user = User.objects.create_user(email=validated_data['email'], first_name=validated_data['first_name'],
@@ -36,6 +46,9 @@ class UserSerializer(serializers.ModelSerializer):
                                         password=validated_data['password'])
 
         return user
+    
+    def get_created_on(self, obj):
+        return obj.published_on.strftime("%B %d, %Y, %I:%M %p")
 
     def validate(self, data):
         user_obj = None
@@ -71,7 +84,7 @@ class UserSerializer(serializers.ModelSerializer):
         return data
 
 
-class ProfileSerializers(serializers.ModelSerializer):
+class ProfileSerializers(ModelSerializer):
     """
     Create a profile instance every-time a new user is created using the @recievers
     which are inbuilt in django. In this case we will be using post_save which is fired every-time
@@ -83,12 +96,12 @@ class ProfileSerializers(serializers.ModelSerializer):
         ('Others', 'Others'),
     )
     user = UserSerializer(many=False, read_only=True)
-    bio = serializers.CharField(max_length=None, min_length=None, allow_blank=True, trim_whitespace=False,
+    bio = CharField(max_length=None, min_length=None, allow_blank=True, trim_whitespace=False,
                                 required=False)
-    avatar = serializers.ImageField(max_length=None, allow_empty_file=True, allow_null=True, use_url=True)
-    birth_date = serializers.DateField(input_formats=['%Y-%m-%d', ], allow_null=True)
+    avatar = ImageField(max_length=None, allow_empty_file=True, allow_null=True, use_url=True)
+    birth_date = DateField(input_formats=['%Y-%m-%d', ], allow_null=True)
     phone_number = PhoneNumberField(validators=[UniqueValidator(queryset=Profile.objects.all())])
-    gender = serializers.ChoiceField(GENDER_CHOICE, allow_null=True, allow_blank=True)
+    gender = ChoiceField(GENDER_CHOICE, allow_null=True, allow_blank=True)
 
     class Meta:
         model = Profile
@@ -139,13 +152,13 @@ post_save.connect(create_profile, sender=User)
 
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(Serializer):
     """
     Serializer for password change endpoint.
     """
 
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    old_password = CharField(required=True)
+    new_password = CharField(required=True)
 
     @staticmethod
     def validate_new_password(value):
