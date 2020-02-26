@@ -161,6 +161,7 @@ class OffereItemDetailSerializer(serializers.ModelSerializer):
     #url = post_detail_url
     # user = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
     likes_count = SerializerMethodField()
     dislikes_count = SerializerMethodField()
     category = CategorySerializer(read_only=True)
@@ -183,6 +184,7 @@ class OffereItemDetailSerializer(serializers.ModelSerializer):
             'front_page',
             'src',
             'comments',
+            'comments_count',
             'likes_count',
             'dislikes_count',
             'published_at',
@@ -197,6 +199,9 @@ class OffereItemDetailSerializer(serializers.ModelSerializer):
         c_qs = Comment.objects.filter_by_instance(obj)
         comments = CommentSerializer(c_qs, many=True).data
         return comments
+
+    def get_comments_count(self, obj):
+        return obj.comments.count()
     
     def get_likes_count(self, obj):
         return obj.likes.count()
