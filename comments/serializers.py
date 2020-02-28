@@ -102,7 +102,7 @@ class CommentListSerializer(ModelSerializer):
         return obj.dislikes.count()
 
     def get_created_on(self, obj):
-        return obj.timestamp.strftime("%B %d, %Y, %I:%M %p")
+        return obj.timestamp.strftime("%B %d, %Y at %I:%M %p")
 
 class CommentSerializer(ModelSerializer):
     reply_count = SerializerMethodField()

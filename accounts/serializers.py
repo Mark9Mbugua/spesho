@@ -48,17 +48,18 @@ class UserSerializer(ModelSerializer):
         return user
     
     def get_created_on(self, obj):
-        return obj.published_on.strftime("%B %d, %Y, %I:%M %p")
+        # complete format ("%B %d, %Y, %I:%M %p")
+        return obj.published_on.strftime("%B %d, %Y")
 
     def validate(self, data):
         user_obj = None
-        email = data.get("email", None)
+        username = data.get("username", None)
         password = data["password"]
-        if not email:
-            raise ValidationError("Your email is required")
+        if not username:
+            raise ValidationError("Your username is required")
 
         user = User.objects.filter(
-            Q(email=email)
+            Q(username=username)
         )
 
         # TODO LIST

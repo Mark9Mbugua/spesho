@@ -15,7 +15,7 @@ def hex_uuid():
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name=None,username=None, password=None, last_name=None, is_active=True,
+    def create_user(self, email, first_name=None,username=None, password=None, last_name=None, is_active=False,
                     is_staff=False, is_admin=False, verified=False):
         if not email:
             raise ValueError("Users must have an email address")
@@ -81,14 +81,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     published_on = models.DateTimeField(auto_now_add=True)
 
     # USERNAME_FIELD and password are required by default
-    USERNAME_FIELD = 'email'  # username
+    USERNAME_FIELD = 'username'  # username
 
     # $ python manage.py createsuperuser
     # Creates more field when you are creating superuser
     REQUIRED_FIELDS = [
+        'email',
         'first_name',
-        'last_name',
-        'username'
+        'last_name'
     ]
 
     objects = UserManager()
