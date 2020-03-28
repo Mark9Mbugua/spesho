@@ -1,0 +1,164 @@
+*{
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Cuprum', sans-serif;
+}
+
+.navbar {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: #3C4148;
+    height: 8vh;
+    margin-bottom:0 !important;
+    border-radius: 0 !important;
+}
+
+.logo {
+    margin-left: 0;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.site-logo {
+    background: transparent;
+    height: 8vh;
+    width: 7vh;
+    border: none;
+    margin-left: 4%;
+}
+
+.site-logo:focus {
+    background: rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+
+.logo-link {
+    font-size: 5vh;
+    font-weight: bold;
+    color: white;
+    text-shadow: 3px 3px 3px #292F36;
+    text-decoration: None;
+    padding: 0 1rem;
+}
+
+.logo-link:focus {
+    background: rgba(0, 0, 0, 0.1);
+    outline: none;
+    color:white;
+    text-decoration: None;
+}
+
+.logo-link:hover {
+    background: rgba(0, 0, 0, 0.1);
+    outline: none;
+    color:white;
+    text-decoration: None;
+}
+
+.password-reset{
+    background: #ccc;
+    height: 100vh;
+    margin-top: 0;
+    padding: 120px 0 0 430px;
+}
+
+.reset-body {
+    background: #fff;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 50vh;
+    line-height: 3.5vh;
+    width: 60%;
+    padding-top: 30px;
+    border-radius: 1%;
+}
+
+p {
+    font-size: 2.5vh;
+}
+
+.form-fields {
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 8px 50px;
+    text-align: center;
+    width: 70%;
+    border-radius: 2%;
+    height: 30vh;
+}
+
+.password-input {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+label {
+    padding-right: 8px;
+    font-size: 2vh;
+}
+
+input {
+    background: #ddd;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    margin-left: 5px;
+    width: 60%;
+}
+
+input:focus {
+    outline: none;
+    background: #ccc;
+}
+
+.button-field {
+    padding: 20px 15px;
+}
+
+button {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background: #FF4B2B;
+    color: #ffffff !important;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    transition: transform 80ms ease-in;
+    margin-left: -25%;
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+button:focus {
+    outline: none;
+}
+
+button.ghost {
+    background-color: transparent;
+    border-color: #FFFFFF;
+}
+
+.password-reset-success {
+    text-align: center;
+    margin-top: 25vh;
+}
+
+.password-label {
+    width: 150px;
+    display:inline-block;
+}

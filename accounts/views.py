@@ -24,8 +24,6 @@ User = get_user_model()
 
 # generate random code
 
-
-
 class UserCreate(APIView):
     """
     Registration of a user.
@@ -133,7 +131,7 @@ class UpdatePhoneNumberView(APIView):
 
     def patch (self, request):
         """
-        update user profile
+        update phone number
         :param request:
         :return:
         """ 

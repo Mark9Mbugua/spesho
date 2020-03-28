@@ -14,6 +14,9 @@ import datetime
 import os
 from decouple import config, Csv
 from corsheaders.defaults import default_methods, default_headers
+import mimetypes
+
+mimetypes.add_type("image/svg+xml", ".svg", True)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -33,6 +36,9 @@ ALLOWED_HOSTS = config('DEV_ALLOWED_HOSTS')
 # Application definition
 
 INSTALLED_APPS = [
+    #accounts app is top to enable custom password reset
+    'accounts',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,8 +59,9 @@ INSTALLED_APPS = [
     # Django REST framework Elasticsearch integration (this package)
     'django_elasticsearch_dsl_drf',
 
+    'bootstrap3',
+
     #apps
-    'accounts',
     'specials',
     'comments',
     'votes',

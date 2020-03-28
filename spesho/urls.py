@@ -20,7 +20,7 @@ urlpatterns = [
     path('api/v1/accounts/', include('accounts.urls'), name='accounts'),
     path('api/v1/votes/', include('votes.urls'), name='votes'),
     path('', schema_view, name="docs"),
-    path('api/v1/accounts/login/', obtain_jwt_token),
+    path('accounts/login/', obtain_jwt_token),
     path('refresh/token/', refresh_jwt_token),
     path('docs/', include_docs_urls(title='My API title')),
     path('api/auth-jwt-verify/', verify_jwt_token),
