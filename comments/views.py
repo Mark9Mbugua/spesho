@@ -71,6 +71,22 @@ class CommentListAPIView(ListAPIView):
         return queryset_list
 
 
+
+class ItemParentCommentListAPIView(ListAPIView):
+    serializer_class = CommentListSerializer
+    permission_classes = [AllowAny]
+    filter_backends= [SearchFilter, OrderingFilter]
+    search_fields = ['content', 'user__first_name']
+    pagination_class = ItemPageNumberPagination
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Comment.objects.all()
+        item_id = self.request.query_params.get("id", None)
+        if item_id is not None:
+            queryset = Comment.objects.filter(object_id=item_id)
+        return queryset
+
+
 class CommentDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Comment.objects.filter(id__gte=0)
     serializer_class = CommentDetailSerializer
