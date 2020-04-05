@@ -177,7 +177,8 @@ class ChangePasswordView(APIView):
     """
     An endpoint for changing the user's password.
     """
-
+    permission_classes = (IsAuthenticated,)
+    
     def get_object(self):
         return self.request.user
 
@@ -194,7 +195,7 @@ class ChangePasswordView(APIView):
             # set_password also hashes the password that the user will get
             self.object.set_password(serializer.data.get("new_password"))
             self.object.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response({"success":True})
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
