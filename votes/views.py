@@ -73,6 +73,20 @@ class VoteListAPIView(ListAPIView):
         return queryset_list
 
 
+class ItemVoteListAPIView(ListAPIView):
+    serializer_class = VoteListSerializer
+    permission_classes = [AllowAny]
+    filter_backends= [SearchFilter, OrderingFilter]
+    search_fields = ['content', 'user__first_name']
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Vote.objects.all()
+        item_id = self.request.query_params.get("id", None)
+        if item_id is not None:
+            queryset = Vote.objects.filter(object_id=item_id)
+        return queryset
+
+
 class VoteDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Vote.objects.filter(id__gte=0)
     serializer_class = VoteDetailSerializer

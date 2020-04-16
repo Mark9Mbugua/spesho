@@ -15,6 +15,9 @@ User = get_user_model()
 
 def create_vote_serializer(model_type=None, id=None, user=None):
     class VoteCreateSerializer(ModelSerializer):
+        created_at = SerializerMethodField()
+        updated_at = SerializerMethodField()
+
         class Meta:
             model = Vote
             fields = [
@@ -23,6 +26,12 @@ def create_vote_serializer(model_type=None, id=None, user=None):
                 'created_at',
                 'updated_at'
             ]
+
+        def get_created_at(self, obj):
+            return obj.created_at.strftime("%B %d, %Y at %I:%M %p")
+    
+        def get_updated_at(self, obj):
+            return obj.updated_at.strftime("%B %d, %Y at %I:%M %p")
 
         def __init__(self, *args, **kwargs):
             self.model_type = model_type
@@ -57,6 +66,9 @@ def create_vote_serializer(model_type=None, id=None, user=None):
 
 
 class VoteListSerializer(ModelSerializer):
+    created_at = SerializerMethodField()
+    updated_at = SerializerMethodField()
+    
     class Meta:
         model = Vote
         fields = [
@@ -67,6 +79,11 @@ class VoteListSerializer(ModelSerializer):
             'updated_at'
         ]
 
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%B %d, %Y at %I:%M %p")
+    
+    def get_updated_at(self, obj):
+        return obj.updated_at.strftime("%B %d, %Y at %I:%M %p")
 
 class VoteSerializer(ModelSerializer):
 
@@ -101,6 +118,8 @@ class VoteCountSerializer(ModelSerializer):
 
 class VoteDetailSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
+    created_at = SerializerMethodField()
+    updated_at = SerializerMethodField()
 
     class Meta:
         model = Vote
@@ -117,3 +136,9 @@ class VoteDetailSerializer(ModelSerializer):
             'content_type',
             'object_id',
         ]
+
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%B %d, %Y at %I:%M %p")
+    
+    def get_updated_at(self, obj):
+        return obj.updated_at.strftime("%B %d, %Y at %I:%M %p")
