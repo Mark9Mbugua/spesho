@@ -22,8 +22,9 @@ urlpatterns = [
             name='password_reset_confirm'),
     path('reset/done/', PasswordResetCompleteView.as_view(), name='password_reset_complete'),
     path('user/change-password', ChangePasswordView.as_view(), name="change_password"),
+    path('user/', CurrentUserView.as_view(), name='current-user'),
     path('user/profile', ProfileView.as_view(), name='user-profile'),
-    path('user/update/phone-number', UpdatePhoneNumberView.as_view(), name="create_update_phone_number"),
-    path('user/verification-code', VerificationCodeView.as_view(), name="verification_code"),
+    path('user/update/phone-number', UpdatePhoneNumberView.as_view(), name="create-update-phone-number"),
+    path('user/verification-code', VerificationCodeView.as_view(), name="verification-code"),
 
 ]

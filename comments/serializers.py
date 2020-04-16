@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     HyperlinkedIdentityField,
     ModelSerializer,
     SerializerMethodField,
+    UUIDField,
     ValidationError
     )
 
@@ -18,13 +19,46 @@ User = get_user_model()
 
 def create_comment_serializer(model_type='item', id=None, parent_id=None, user=None):
     class CommentCreateSerializer(ModelSerializer):
+        user = UserSerializer(read_only=True)
+        reply_count = SerializerMethodField()
+        likes_count = SerializerMethodField()
+        dislikes_count = SerializerMethodField()
+        created_on = SerializerMethodField()
+
         class Meta:
             model = Comment
             fields = [
                 'id',
+                'user',
                 'content',
-                'timestamp',
+                'object_id',
+                'content_type',
+                'reply_count',
+                'likes_count',
+                'dislikes_count',
+                'created_on',
             ]
+            read_only_fields = [
+                'object_id',
+                'content_type',
+                'reply_count',
+                'likes_count',
+                'dislikes_count',
+            ]
+        
+        def get_reply_count(self, obj):
+            if obj.is_parent:
+                return obj.children().count()
+            return 0
+    
+        def get_likes_count(self, obj):
+            return obj.likes.count()
+        
+        def get_dislikes_count(self, obj):
+            return obj.dislikes.count()
+
+        def get_created_on(self, obj):
+            return obj.timestamp.strftime("%B %d, %Y at %I:%M %p")
 
         def __init__(self, *args, **kwargs):
             self.model_type = model_type
@@ -68,11 +102,13 @@ def create_comment_serializer(model_type='item', id=None, parent_id=None, user=N
 class CommentListSerializer(ModelSerializer):
     url = HyperlinkedIdentityField(
         view_name='comments:thread')
+    id = UUIDField(format='hex', read_only=True)
     user = UserSerializer(read_only=True)
     reply_count = SerializerMethodField()
     likes_count = SerializerMethodField()
     dislikes_count = SerializerMethodField()
     created_on = SerializerMethodField()
+    parent = UUIDField(format='hex', read_only=True, source='parent.id')
     
     class Meta:
         model = Comment
@@ -105,9 +141,11 @@ class CommentListSerializer(ModelSerializer):
         return obj.timestamp.strftime("%B %d, %Y at %I:%M %p")
 
 class CommentSerializer(ModelSerializer):
+    id = UUIDField(format='hex', read_only=True)
     reply_count = SerializerMethodField()
     likes_count = SerializerMethodField()
     dislikes_count = SerializerMethodField()
+    created_on = SerializerMethodField()
     
     class Meta:
         model = Comment
@@ -120,7 +158,7 @@ class CommentSerializer(ModelSerializer):
             'reply_count',
             'likes_count',
             'dislikes_count',
-            'timestamp',
+            'created_on',
         ]   
         read_only_fields = [
             'object_id',
@@ -128,6 +166,7 @@ class CommentSerializer(ModelSerializer):
             'reply_count',
             'likes_count',
             'dislikes_count',
+
         ]
     
     def get_reply_count(self, obj):
@@ -140,6 +179,9 @@ class CommentSerializer(ModelSerializer):
     
     def get_dislikes_count(self, obj):
         return obj.dislikes.count()
+    
+    def get_created_on(self, obj):
+        return obj.timestamp.strftime("%B %d, %Y at %I:%M %p")
 
 
 class CommentChildSerializer(ModelSerializer):
@@ -155,12 +197,14 @@ class CommentChildSerializer(ModelSerializer):
 
 
 class CommentDetailSerializer(ModelSerializer):
+    id = UUIDField(format='hex', read_only=True)
     user = UserSerializer(read_only=True)
     reply_count = SerializerMethodField()
     content_object_url = SerializerMethodField()
     replies =   SerializerMethodField()
     likes_count = SerializerMethodField()
     dislikes_count = SerializerMethodField()
+    created_on = SerializerMethodField()
 
     class Meta:
         model = Comment
@@ -174,7 +218,7 @@ class CommentDetailSerializer(ModelSerializer):
             'replies',
             'likes_count',
             'dislikes_count',
-            'timestamp',
+            'created_on',
             'content_object_url',
         ]
         read_only_fields = [
@@ -206,3 +250,6 @@ class CommentDetailSerializer(ModelSerializer):
     
     def get_dislikes_count(self, obj):
         return obj.dislikes.count()
+
+    def get_created_on(self, obj):
+        return obj.timestamp.strftime("%B %d, %Y at %I:%M %p")
