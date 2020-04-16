@@ -2,11 +2,13 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.db.models import Q
+from rest_framework import status
 from rest_framework.filters import (
         SearchFilter,
         OrderingFilter,
     )
 
+from rest_framework.response import Response
 from rest_framework.mixins import DestroyModelMixin, UpdateModelMixin
 from rest_framework.generics import (
     CreateAPIView,
@@ -83,7 +85,22 @@ class ItemParentCommentListAPIView(ListAPIView):
         queryset = Comment.objects.all()
         item_id = self.request.query_params.get("id", None)
         if item_id is not None:
-            queryset = Comment.objects.filter(object_id=item_id)
+            queryset = Comment.objects.filter(object_id=item_id, parent=None)
+        return queryset
+    
+
+class ReplyListAPIView(ListAPIView):
+    serializer_class = CommentListSerializer
+    permission_classes = [AllowAny]
+    filter_backends= [SearchFilter, OrderingFilter]
+    search_fields = ['content', 'user__first_name']
+    pagination_class = ItemPageNumberPagination
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = Comment.objects.all()
+        parent_id = self.request.query_params.get("id", None)
+        if parent_id is not None:
+            queryset = Comment.objects.filter(parent=parent_id)
         return queryset
 
 
