@@ -5,6 +5,7 @@ from rest_framework.serializers import (
     HyperlinkedIdentityField,
     ModelSerializer,
     SerializerMethodField,
+    UUIDField,
     ValidationError
     )
 
@@ -15,6 +16,7 @@ User = get_user_model()
 
 def create_vote_serializer(model_type=None, id=None, user=None):
     class VoteCreateSerializer(ModelSerializer):
+        user = UserSerializer(read_only=True)
         created_at = SerializerMethodField()
         updated_at = SerializerMethodField()
 
@@ -23,6 +25,8 @@ def create_vote_serializer(model_type=None, id=None, user=None):
             fields = [
                 'id',
                 'vote_type',
+                'user',
+                'object_id',
                 'created_at',
                 'updated_at'
             ]
@@ -66,6 +70,8 @@ def create_vote_serializer(model_type=None, id=None, user=None):
 
 
 class VoteListSerializer(ModelSerializer):
+    id = UUIDField(format='hex', read_only=True)
+    user = UserSerializer(read_only=True)
     created_at = SerializerMethodField()
     updated_at = SerializerMethodField()
     
@@ -74,6 +80,7 @@ class VoteListSerializer(ModelSerializer):
         fields = [
             'id',
             'vote_type',
+            'user',
             'object_id',
             'created_at',
             'updated_at'
@@ -117,6 +124,7 @@ class VoteCountSerializer(ModelSerializer):
 
 
 class VoteDetailSerializer(ModelSerializer):
+    id = UUIDField(format='hex', read_only=True)
     user = UserSerializer(read_only=True)
     created_at = SerializerMethodField()
     updated_at = SerializerMethodField()

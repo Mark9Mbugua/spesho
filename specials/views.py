@@ -213,7 +213,7 @@ class ItemListPerStoreView(APIView):
 
 class ItemDetailAPIView(DestroyModelMixin, UpdateModelMixin, RetrieveAPIView):
     queryset = Item.objects.all()
-    serializer_class = OffereItemDetailSerializer
+    serializer_class = OfferItemDetailSerializer
     permission_classes = [IsOwnerOrReadOnly]
 
     def patch(self, request, *args, **kwargs):

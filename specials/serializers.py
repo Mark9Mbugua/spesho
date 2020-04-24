@@ -157,7 +157,7 @@ def create_item_serializer(category_id=None, store_id=None, user=None):
 
     return ItemCreateSerializer
 
-class OffereItemDetailSerializer(serializers.ModelSerializer):
+class OfferItemDetailSerializer(serializers.ModelSerializer):
     #url = post_detail_url
     # user = UserSerializer(read_only=True)
     comments = serializers.SerializerMethodField()
