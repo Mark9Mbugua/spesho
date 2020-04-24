@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.shortcuts import get_object_or_404
 import uuid
 import datetime
 
@@ -66,9 +67,3 @@ class Vote(models.Model):
     # Method to save votes
     def save_vote (self):
         return self.save()
-    
-    def likes(self, object_id=None): # likes
-        return Vote.objects.filter(vote_type=1)
-
-    def dislikes(self, object_id=None): # dislikes
-        return Vote.objects.filter(vote_type=2)
