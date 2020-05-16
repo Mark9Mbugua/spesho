@@ -15,7 +15,7 @@ def hex_uuid():
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, first_name=None,username=None, password=None, last_name=None, is_active=False,
+    def create_user(self, email, first_name=None,username=None, password=None, last_name=None, is_active=True,
                     is_staff=False, is_admin=False, verified=False):
         if not email:
             raise ValueError("Users must have an email address")
@@ -137,7 +137,7 @@ class Profile(models.Model):
     GENDER_CHOICE = (
         ('Male', 'Male'),
         ('Female', 'Female'),
-        ('Others', 'Others'),
+        ('Other', 'Other'),
     )
 
     id = models.UUIDField(primary_key=True, default=hex_uuid, editable=False)

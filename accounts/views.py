@@ -41,40 +41,11 @@ class UserCreate(APIView):
         """
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            user = serializer.save()
-            if user:
-                cleaned_user = serializer.data
-                email = cleaned_user['email']
-                name = cleaned_user['username']
-                send_welcome_email(name, email, user)
+            serializer.save()
             return Response(serializer.data,
                             status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-def activate(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
-    """
-    ***** BACKEND IS VERY IMPORTANT ******
-    adding backend help resolve the multiple authentication issues
-
-    TODO LIST (DESIGN)
-    1. Add templates to replace `return HttpResponse('Thank you for your email confirmation. Now you can login your
-        account.') and  return HttpResponse('Activation link is invalid!')`
-    2. Write test and maintain the existing code to pass
-    """
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        login(request, user, backend)
-        return HttpResponse('Thank you for your email confirmation. Now you can login your account.')
-    else:
-        return HttpResponse('Activation link is invalid!')
 
 
 class CurrentUserView(APIView):

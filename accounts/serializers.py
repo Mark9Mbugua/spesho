@@ -33,10 +33,11 @@ class UserSerializer(ModelSerializer):
                                    trim_whitespace=True)
     password = CharField(min_length=8, write_only=True)
     created_on = SerializerMethodField()
+    token = SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ('id','email', 'first_name', 'last_name','username', 'password', 'created_on')
+        fields = ('id','email', 'first_name', 'last_name','username', 'password', 'created_on', 'token')
         extra_kwargs = {'password': {'write_only': True}}
 
 
@@ -46,6 +47,11 @@ class UserSerializer(ModelSerializer):
                                         password=validated_data['password'])
 
         return user
+    
+    def get_token(self, obj):
+        payload = jwt_payload_handler(obj)
+        token = jwt_encode_handler(payload)
+        return token
     
     def get_created_on(self, obj):
         # complete format ("%B %d, %Y, %I:%M %p")
