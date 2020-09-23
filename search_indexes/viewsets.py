@@ -7,6 +7,13 @@ from django_elasticsearch_dsl_drf.filter_backends import (
     OrderingFilterBackend,
     SearchFilterBackend,
     SuggesterFilterBackend,
+    FacetedSearchFilterBackend,
+)
+
+from elasticsearch_dsl import (
+    DateHistogramFacet,
+    RangeFacet,
+    TermsFacet,
 )
 
 from django_elasticsearch_dsl_drf.pagination import LimitOffsetPagination
@@ -27,6 +34,7 @@ class ItemDocumentViewSet(DocumentViewSet):
         SearchFilterBackend,
         DefaultOrderingFilterBackend,
         SuggesterFilterBackend,
+        FacetedSearchFilterBackend
     ]
     pagination_class = LimitOffsetPagination
     
@@ -104,4 +112,43 @@ class ItemDocumentViewSet(DocumentViewSet):
                 SUGGESTER_COMPLETION,
             ],
         },
+    }
+
+    # Faceted search fields
+    faceted_search_fields = {
+        'category': {
+            'field': 'category.category_name.raw',
+            'facet': TermsFacet,
+            'enabled': True
+        },
+        'store': {
+            'field': 'store.store_name.raw',
+            'facet': TermsFacet,
+            'enabled': True
+        },
+        'brand': {
+            'field': 'brand.raw',
+            'facet': TermsFacet,
+            'enabled': True
+        },
+        'price': {
+            'field': 'price',
+            'facet': RangeFacet,
+            'enabled': True,
+            'options': {
+                'ranges': [
+                    ("<100", (None, 100)),
+                    ("100-200", (100, 200)),
+                    ("200-500", (200, 500)),
+                    ("500-1000", (500, 1000)),
+                    ("1000-2000", (1000, 2000)),
+                    ("2000-5000", (2000, 5000)),
+                    ("5000-10000", (5000, 10000)),
+                    ("10000-20000", (10000, 20000)),
+                    ("20000-50000", (20000, 50000)),
+                    ("50000-100000", (50000, 100000)),
+                    (">100000", (100000, None)),
+                ]
+            }
+        }       
     }

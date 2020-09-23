@@ -26,7 +26,7 @@ html_strip = analyzer(
 @INDEX.doc_type
 class ItemDocument(Document):
     """Item Elasticsearch document."""
-
+    
     id = fields.KeywordField(attr='id')
 
     deal_title = fields.TextField(
