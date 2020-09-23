@@ -5,6 +5,7 @@ __pycache__/
 *pyc
 .vscode/
 *.cpython-36.pyc
+.minio.sys/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
