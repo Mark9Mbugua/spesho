@@ -48,11 +48,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'imagekit',
     'phonenumber_field',
-    'minio_storage',
+    # 'minio_storage',
     'corsheaders',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
+    # 'allauth',
+    # 'allauth.account',
     # Django Elasticsearch integration
     'django_elasticsearch_dsl',
 
@@ -128,19 +128,19 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 # Minio configuration
-DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
-# STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
-MINIO_STORAGE_ACCESS_KEY = config('MINIO_ACCESS_KEY')
-MINIO_STORAGE_SECRET_KEY = config('MINIO_SECRET_KEY')
-MINIO_STORAGE_ENDPOINT = config('MINIO_STORAGE_ENDPOINT')
-MINIO_STORAGE_USE_HTTPS = False
-MINIO_STORAGE_MEDIA_BUCKET_NAME = "dev-media-items-bucket"
-MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-MINIO_STORAGE_STATIC_BUCKET_NAME = "dev-static-items-bucket"
-MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000 /minio/dev-media-items-bucket'
-MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
-MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
-MINIO_STORAGE_STATIC_USE_PRESIGNED = True
+# DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+# # STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+# MINIO_STORAGE_ACCESS_KEY = config('MINIO_ACCESS_KEY')
+# MINIO_STORAGE_SECRET_KEY = config('MINIO_SECRET_KEY')
+# MINIO_STORAGE_ENDPOINT = config('MINIO_STORAGE_ENDPOINT')
+# MINIO_STORAGE_USE_HTTPS = False
+# MINIO_STORAGE_MEDIA_BUCKET_NAME = "dev-media-items-bucket"
+# MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+# MINIO_STORAGE_STATIC_BUCKET_NAME = "dev-static-items-bucket"
+# MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000/minio/dev-media-items-bucket'
+# MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+# MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
+# MINIO_STORAGE_STATIC_USE_PRESIGNED = True
 
 # CORS Configuration
 CORS_ORIGIN_ALLOW_ALL = True
