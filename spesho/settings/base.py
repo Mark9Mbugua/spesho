@@ -48,11 +48,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'imagekit',
     'phonenumber_field',
-    'minio_storage',
     'corsheaders',
+    'storages',
     'django.contrib.sites',
-    'allauth',
-    'allauth.account',
+    # 'allauth',
+    # 'allauth.account',
     # Django Elasticsearch integration
     'django_elasticsearch_dsl',
 
@@ -128,19 +128,19 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 # Minio configuration
-DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
-# STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
-MINIO_STORAGE_ACCESS_KEY = config('MINIO_ACCESS_KEY')
-MINIO_STORAGE_SECRET_KEY = config('MINIO_SECRET_KEY')
-MINIO_STORAGE_ENDPOINT = config('MINIO_STORAGE_ENDPOINT')
-MINIO_STORAGE_USE_HTTPS = False
-MINIO_STORAGE_MEDIA_BUCKET_NAME = "dev-media-items-bucket"
-MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
-MINIO_STORAGE_STATIC_BUCKET_NAME = "dev-static-items-bucket"
-MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000 /minio/dev-media-items-bucket'
-MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
-MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
-MINIO_STORAGE_STATIC_USE_PRESIGNED = True
+# DEFAULT_FILE_STORAGE = "minio_storage.storage.MinioMediaStorage"
+# # STATICFILES_STORAGE = "minio_storage.storage.MinioStaticStorage"
+# MINIO_STORAGE_ACCESS_KEY = config('MINIO_ACCESS_KEY')
+# MINIO_STORAGE_SECRET_KEY = config('MINIO_SECRET_KEY')
+# MINIO_STORAGE_ENDPOINT = config('MINIO_STORAGE_ENDPOINT')
+# MINIO_STORAGE_USE_HTTPS = False
+# MINIO_STORAGE_MEDIA_BUCKET_NAME = "dev-media-items-bucket"
+# MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = True
+# MINIO_STORAGE_STATIC_BUCKET_NAME = "dev-static-items-bucket"
+# MINIO_STORAGE_STATIC_URL = '192.168.2.57:9000/minio/dev-media-items-bucket'
+# MINIO_STORAGE_AUTO_CREATE_STATIC_BUCKET = True
+# MINIO_STORAGE_MEDIA_USE_PRESIGNED = True
+# MINIO_STORAGE_STATIC_USE_PRESIGNED = True
 
 # CORS Configuration
 CORS_ORIGIN_ALLOW_ALL = True
@@ -263,7 +263,7 @@ ACCOUNT_USERNAME_REQUIRED = True
 # )
 
 # Media URL
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Static files (CSS, JavaScript, Images)
@@ -271,5 +271,22 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# AWS S3
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
+AWS_MEDIA_LOCATION = 'media'
+
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_REGION_NAME ='eu-west-3'
+
+# Production Media URL
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_MEDIA_LOCATION}/'
+
+# media storage configurations
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 APPEND_SLASH = False
